@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19G2005" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CDMLight" representedClassName="CDMLight" syncable="YES" codeGenerationType="class">
+        <attribute name="blue" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="255" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="effect" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="19" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="green" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="255" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="peripheralName" optional="YES" attributeType="String"/>
+        <attribute name="peripheralUUID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="red" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="255" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="registeredName" optional="YES" attributeType="String" defaultValueString="New Light"/>
+        <attribute name="speed" optional="YES" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="state" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="2" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="lightGroup" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDMLightGroup" inverseName="lights" inverseEntity="CDMLightGroup"/>
+    </entity>
+    <entity name="CDMLightGroup" representedClassName="CDMLightGroup" syncable="YES" codeGenerationType="class">
+        <attribute name="blue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="effect" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="19" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="green" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="255" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" defaultValueString="New Group"/>
+        <attribute name="red" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="255" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="speed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="state" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="2" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="lights" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDMLight" inverseName="lightGroup" inverseEntity="CDMLight"/>
+    </entity>
+    <elements>
+        <element name="CDMLight" positionX="-45" positionY="36" width="128" height="193"/>
+        <element name="CDMLightGroup" positionX="-27" positionY="90" width="128" height="178"/>
+    </elements>
 </model>
