@@ -22,11 +22,6 @@ protocol CoreBluetoothManagerDelegate: class {
 }
 
 class CoreBluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
-    public static let serviceFFD0 = CBUUID(string: "FFD0")
-    public static let serviceFFD5 = CBUUID(string: "FFD5")
-    public static let characteristicFFD4 = CBUUID(string: "FFD4")
-    public static let characteristicFFD9 = CBUUID(string: "FFD9")
-    
     weak var delegate: CoreBluetoothManagerDelegate?
     private var bluetoothCentralManager: CBCentralManager!
     
@@ -41,6 +36,10 @@ class CoreBluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDele
     func startBluetoothManager(){
         self.bluetoothCentralManager = CBCentralManager(delegate: self, queue: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.refresh()
+        }
+        
+        Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { (timer) in
             self.refresh()
         }
     }
@@ -75,15 +74,20 @@ class CoreBluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDele
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         peripheral.delegate = self
-        peripheral.discoverServices([Self.serviceFFD0, Self.serviceFFD5])
+        peripheral.discoverServices([.serviceFFD0, .serviceFFD5])
+        
+        if let index = self.peripherals.firstIndex(where: { $0.identifier == peripheral.identifier }){
+            self.peripherals.remove(at: index)
+        }
         self.peripherals.append(peripheral)
+        
         self.delegate?.didDiscoverLightPeripheral(peripheral: peripheral)
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let services = peripheral.services{
             for service in services{
-                peripheral.discoverCharacteristics([Bluetooth.characteristic1UUID, Bluetooth.characteristic2UUID], for: service)
+                peripheral.discoverCharacteristics([.characteristicFFD9, .characteristicFFD4], for: service)
             }
         }
     }
@@ -91,9 +95,7 @@ class CoreBluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDele
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
 //        if let characteristics = service.characteristics{
 //            if let ffd9 = characteristics.first(where: { (characteristic) -> Bool in characteristic.uuid.uuidString == "FFD9" }){
-//                let payload: [UInt8] = [0xEF, 0x01, 0x77]
-//                let data = Data(bytes: payload, count: 3)
-//                peripheral.writeValue(data, for: ffd9, type: .withResponse)
+                
 //            }else if let ffd4 = characteristics.first(where: { (characteristic) -> Bool in characteristic.uuid.uuidString == "FFD4" }){
 //                peripheral.setNotifyValue(true, for: ffd4)
 //            }
@@ -243,4 +245,11 @@ class CoreBluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDele
         }
     }
 
+}
+
+extension CBUUID{
+    public static let serviceFFD0 = CBUUID(string: "FFD0")
+    public static let serviceFFD5 = CBUUID(string: "FFD5")
+    public static let characteristicFFD4 = CBUUID(string: "FFD4")
+    public static let characteristicFFD9 = CBUUID(string: "FFD9")
 }

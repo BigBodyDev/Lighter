@@ -14,8 +14,12 @@ class CoreDataManager: NSObject{
     var managedObjectContext: NSManagedObjectContext!
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     
-    var lights = [CDMLight]()
-    var groups = [CDMLightGroup]()
+    private(set) var lights = [CDMLight]()
+    private(set) var groups = [CDMLightGroup]()
+    
+    enum ChangeMethod {
+        case post, put, delete
+    }
     
     override init() {
         super.init()
@@ -38,81 +42,67 @@ class CoreDataManager: NSObject{
         }
     }
     
-    func registerLight(light: Light){
-        let cdm = CDMLight(context: managedObjectContext)
-        cdm.peripheralName = light.peripheralName
-        cdm.peripheralUUID = light.peripheralUUID
-        cdm.registeredName = light.registeredName
-        
-        cdm.state = Int16(light.state.rawValue)
-        
-        cdm.red = Int16(light.color?.redComponent ?? 0)
-        cdm.green = Int16(light.color?.greenComponent ?? 0)
-        cdm.blue = Int16(light.color?.blueComponent ?? 0)
-        
-        cdm.effect = Int16(light.effect?.rawValue ?? 0)
-        cdm.speed = Int16(light.speed ?? 0)
-        
-        appDelegate?.saveContext()
-        fetch()
-    }
-    
-    func createGroup(group: LightGroup){
-        let cdm = CDMLightGroup(context: managedObjectContext)
-        cdm.name = group.name
-        cdm.uuid = group.UUID
-        
-        cdm.state = Int16(group.state.rawValue)
-        
-        cdm.red = Int16(group.color?.redComponent ?? 0)
-        cdm.green = Int16(group.color?.greenComponent ?? 0)
-        cdm.blue = Int16(group.color?.blueComponent ?? 0)
-        
-        cdm.effect = Int16(group.effect?.rawValue ?? 0)
-        cdm.speed = Int16(group.speed ?? 0)
-        
-        for light in group.lights{
-            if let cdmLight = self.lights.first(where: { $0.peripheralUUID == light.peripheralUUID }){
-                cdm.addToLights(cdmLight)
-            }
-        }
-        
-        appDelegate?.saveContext()
-        fetch()
-    }
-    
-    func updateLight(light: Light){
-        if let cdm = self.lights.first(where: { $0.peripheralUUID == light.peripheralUUID }){
+    func persist(light: Light, withMethod method: ChangeMethod){
+        switch method{
+        case .post:
+            let cdm = CDMLight(context: managedObjectContext)
+            cdm.peripheralName = light.peripheralName
+            cdm.peripheralUUID = light.peripheralUUID
             cdm.registeredName = light.registeredName
             
-            cdm.state = Int16(light.state.rawValue)
+            cdm.state = light.state.rawValue
             
-            cdm.red = Int16(light.color?.redComponent ?? 0)
-            cdm.green = Int16(light.color?.greenComponent ?? 0)
-            cdm.blue = Int16(light.color?.blueComponent ?? 0)
+            cdm.red = Double(light.color?.components.red ?? 1)
+            cdm.green = Double(light.color?.components.green ?? 1)
+            cdm.blue = Double(light.color?.components.blue ?? 1)
             
-            cdm.effect = Int16(light.effect?.rawValue ?? 0)
-            cdm.speed = Int16(light.speed ?? 0)
+            cdm.effect = light.effect?.rawValue ?? 0
+            cdm.speed = light.speed ?? 0
             
             appDelegate?.saveContext()
-            fetch()
+            
+        case .put:
+            guard let index = self.lights.firstIndex(where: { light.peripheralUUID == $0.peripheralUUID }) else { return }
+            
+            self.lights[index].registeredName = light.registeredName
+            
+            self.lights[index].state = light.state.rawValue
+            
+            self.lights[index].red = Double(light.color?.components.red ?? 1)
+            self.lights[index].green = Double(light.color?.components.green ?? 1)
+            self.lights[index].blue = Double(light.color?.components.blue ?? 1)
+            
+            self.lights[index].effect = light.effect?.rawValue ?? 0
+            self.lights[index].speed = light.speed ?? 0
+            
+            appDelegate?.saveContext()
+            
+        case .delete:
+            if let index = self.lights.firstIndex(where: { light.peripheralUUID == $0.peripheralUUID }){
+                managedObjectContext.delete(self.lights[index])
+                self.lights.remove(at: index)
+                
+                appDelegate?.saveContext()
+            }
         }
     }
     
-    func updateGroup(group: LightGroup){
-        if let cdm = self.groups.first(where: { $0.uuid == group.UUID }) {
+    func persist(group: LightGroup, withMethod method: ChangeMethod){
+        switch method {
+        case .post:
+            let cdm = CDMLightGroup(context: managedObjectContext)
             cdm.name = group.name
+            cdm.uuid = group.UUID
             
-            cdm.state = Int16(group.state.rawValue)
+            cdm.state = group.state.rawValue
             
-            cdm.red = Int16(group.color?.redComponent ?? 0)
-            cdm.green = Int16(group.color?.greenComponent ?? 0)
-            cdm.blue = Int16(group.color?.blueComponent ?? 0)
+            cdm.red = Double(group.color?.components.red ?? 1)
+            cdm.green = Double(group.color?.components.green ?? 1)
+            cdm.blue = Double(group.color?.components.blue ?? 1)
             
-            cdm.effect = Int16(group.effect?.rawValue ?? 0)
-            cdm.speed = Int16(group.speed ?? 0)
+            cdm.effect = group.effect?.rawValue ?? 0
+            cdm.speed = group.speed ?? 0
             
-            cdm.removeFromLights(cdm.lights ?? NSSet())
             for light in group.lights{
                 if let cdmLight = self.lights.first(where: { $0.peripheralUUID == light.peripheralUUID }){
                     cdm.addToLights(cdmLight)
@@ -120,25 +110,36 @@ class CoreDataManager: NSObject{
             }
             
             appDelegate?.saveContext()
-            fetch()
-        }
-    }
-    
-    func unregisterLight(light: Light) {
-        if let cdm = self.lights.first(where: { $0.peripheralUUID == light.peripheralUUID }){
-            managedObjectContext.delete(cdm)
+        case .put:
+            guard let index = self.groups.firstIndex(where: { group.UUID == $0.uuid }) else { return }
+            
+            self.groups[index].name = group.name
+            
+            self.groups[index].state = group.state.rawValue
+            
+            self.groups[index].red = Double(group.color?.components.red ?? 1)
+            self.groups[index].green = Double(group.color?.components.green ?? 1)
+            self.groups[index].blue = Double(group.color?.components.blue ?? 1)
+            
+            self.groups[index].effect = group.effect?.rawValue ?? 0
+            self.groups[index].speed = group.speed ?? 0
+            
+            self.groups[index].removeFromLights(self.groups[index].lights ?? NSSet())
+            for light in group.lights{
+                if let cdmLight = self.lights.first(where: { $0.peripheralUUID == light.peripheralUUID }){
+                    self.groups[index].addToLights(cdmLight)
+                }
+            }
             
             appDelegate?.saveContext()
-            fetch()
-        }
-    }
-    
-    func deleteGroup(group: LightGroup) {
-        if let cdm = self.groups.first(where: { $0.uuid == group.UUID }){
-            managedObjectContext.delete(cdm)
             
-            appDelegate?.saveContext()
-            fetch()
+        case .delete:
+            if let index = self.groups.firstIndex(where: { group.UUID == $0.uuid }) {
+                managedObjectContext.delete(self.groups[index])
+                self.groups.remove(at: index)
+                
+                appDelegate?.saveContext()
+            }
         }
     }
 }

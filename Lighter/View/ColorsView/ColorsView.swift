@@ -11,42 +11,43 @@ import SwiftUI
 
 
 struct ColorsView: View {
-    @State var colors : [Color] = [
-        .red,
-        .orange,
-        .yellow,
-        .green,
-        .blue,
-        .purple,
-        .pink,
-        .red,
-        .orange,
-        .yellow,
-        .green,
-        .blue,
-        .purple,
-        .pink,
-        .red,
-        .orange,
-        .yellow,
-        .green,
-        .blue,
-        .purple,
-        .pink,
-        .red,
-        .orange,
-        .yellow,
-        .green,
-        .blue,
-        .purple,
-        .pink,
-        .red,
-        .orange,
-        .yellow,
-        .green,
-        .blue,
-        .purple,
-        .pink
+    @Binding var linkedLights: [Light]
+    @State var colors : [UIColor] = [
+        .systemRed,
+        .systemOrange,
+        .systemYellow,
+        .systemGreen,
+        .systemBlue,
+        .systemPurple,
+        .systemPink,
+        .systemRed,
+        .systemOrange,
+        .systemYellow,
+        .systemGreen,
+        .systemBlue,
+        .systemPurple,
+        .systemPink,
+        .systemRed,
+        .systemOrange,
+        .systemYellow,
+        .systemGreen,
+        .systemBlue,
+        .systemPurple,
+        .systemPink,
+        .systemRed,
+        .systemOrange,
+        .systemYellow,
+        .systemGreen,
+        .systemBlue,
+        .systemPurple,
+        .systemPink,
+        .systemRed,
+        .systemOrange,
+        .systemYellow,
+        .systemGreen,
+        .systemBlue,
+        .systemPurple,
+        .systemPink
     ]
     
     func itemForCoordinates(x: Int, y: Int) -> some View{
@@ -54,9 +55,11 @@ struct ColorsView: View {
         
         return Group{
             if index < self.colors.count{
-                BackgroundView(color: self.colors[index])
+                BackgroundView(color: Color(self.colors[index]))
                     .onTapGesture {
-                        print("color selected")
+                        for x in self.linkedLights.indices{
+                            self.linkedLights[x].setColor(color: self.colors[index])
+                        }
                 }
             }else{
                 BackgroundView(color: .clear)
@@ -70,7 +73,7 @@ struct ColorsView: View {
         
         return VStack(alignment: .leading){
             Text("Colors")
-                .font(.headline)
+                .font(.system(size: 22, weight: .semibold, design: .rounded))
                 .padding(.horizontal, 25)
             
             VStack{
@@ -91,6 +94,6 @@ struct ColorsView: View {
 
 struct ColorsView_Previews: PreviewProvider {
     static var previews: some View {
-        ColorsView()
+        ColorsView(linkedLights: .constant([]))
     }
 }

@@ -9,7 +9,7 @@
 import Foundation
 import CoreBluetooth
 import CoreData
-import SwiftUI
+import UIKit
 
 class LightManager: NSObject, ObservableObject, CoreBluetoothManagerDelegate{
     
@@ -21,59 +21,61 @@ class LightManager: NSObject, ObservableObject, CoreBluetoothManagerDelegate{
     @Published var lights = [Light]()
     @Published var groups = [LightGroup]()
     
-//    var CDMLights = [LightCDM]()
-//    var CDMGroups = [LightGroupCDM]()
-    
-//    override class func discoverLights() {
-//        bluetoothCentralManager = CBCentralManager(delegate: self, queue: nil)
-//
-//
-//
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            self.centralManagerDidUpdateState(self.bluetoothCentralManager)
-//        }
-//    }
+    typealias CBWritingItems = (peripheral: CBPeripheral?, characteristic: CBCharacteristic?)
+    static func writingItems(forLight light: Light, withServiceID serviceID: CBUUID, withCharacteristicID characteristicID: CBUUID) -> CBWritingItems{
+        
+        return (Self.shared.bluetoothManager.peripherals.first(where: { $0.identifier == light.peripheralUUID }), Self.shared.bluetoothManager.peripherals.first(where: { $0.identifier == light.peripheralUUID })?.services?.first(where: { $0.uuid == serviceID })?.characteristics?.first(where: { $0.uuid == characteristicID }))
+    }
     
     override init(){
         super.init()
         
         self.dataManager = CoreDataManager()
+        self.lights = dataManager.lights.map( { Light(cdm: $0) })
+        
         self.bluetoothManager = CoreBluetoothManager()
         self.bluetoothManager.delegate = self
-        
-        self.lights = dataManager.lights.map( { lightFromCDMLight(cdmLight: $0, lightStatus: .disconnected)})
-        
         self.bluetoothManager.startBluetoothManager()
     }
     
     func didDiscoverLightPeripheral(peripheral: CBPeripheral) {
-        if let cdm = dataManager.lights.first(where: { $0.peripheralUUID == peripheral.identifier }){
-            let light = lightFromCDMLight(cdmLight: cdm, lightStatus: .connected)
-            
-            if let index = self.lights.firstIndex(where: { $0.peripheralUUID == light.peripheralUUID }){
-                self.lights[index] = light
-            }else{
-                self.lights.append(light)
-            }
-        }else if let index = self.lights.firstIndex(where: { $0.peripheralUUID == peripheral.identifier }){
-            self.lights[index] = Light(peripheralName: peripheral.name ?? "Triones Light", peripheralUUID: peripheral.identifier)
-        }else {
-            self.lights.append(Light(peripheralName: peripheral.name ?? "Triones Light", peripheralUUID: peripheral.identifier))
+        if let index = self.lights.firstIndex(where: { $0.peripheralUUID == peripheral.identifier }){
+            self.lights[index].link(withPeripheral: peripheral)
+        }else{
+            self.lights.append(Light(peripheral: peripheral))
         }
     }
     
-    func lightFromCDMLight(cdmLight: CDMLight, lightStatus: Light.Status) -> Light{
-        Light(peripheralName: cdmLight.peripheralName ?? "Triones Light", peripheralUUID: cdmLight.peripheralUUID ?? UUID(), registeredName: cdmLight.registeredName ?? "New Light", state: Light.State(rawValue: Int(cdmLight.state)) ?? .off, status: lightStatus, color: Color(red: Double(cdmLight.red) / 255, green: Double(cdmLight.green) / 255, blue: Double(cdmLight.blue) / 255), effect: Light.Effect(rawValue: Int(cdmLight.effect)), speed: Int(cdmLight.speed))
+    func persist(light: Light, withMethod method: CoreDataManager.ChangeMethod){
+        dataManager.persist(light: light, withMethod: method)
     }
     
-    func registerLight(light: Light){
-        light.registerLight()
-        dataManager.registerLight(light: light)
-        bluetoothManager.refresh()
+    func persist(group: LightGroup, withMethod method: CoreDataManager.ChangeMethod){
+        dataManager.persist(group: group, withMethod: method)
     }
     
-    func saveLight(light: Light){
-        dataManager.updateLight(light: light)
+    func setLightState(light: Light, toOff: Bool){
+        let items = Self.writingItems(forLight: light, withServiceID: .serviceFFD5, withCharacteristicID: .characteristicFFD9)
+        
+        if let peripheral = items.peripheral, let ffd9 = items.characteristic{
+            let payload: [UInt8] = [0xCC, toOff ? 0x24 : 0x23, 0x33]
+            let data = Data(bytes: payload, count: 3)
+            peripheral.writeValue(data, for: ffd9, type: .withoutResponse)
+            
+            persist(light: light, withMethod: .put)
+        }
+    }
+    
+    func setColor(light: Light, color: UIColor){
+        let items = Self.writingItems(forLight: light, withServiceID: .serviceFFD5, withCharacteristicID: .characteristicFFD9)
+        
+        if let peripheral = items.peripheral, let ffd9 = items.characteristic, let red = UInt8(exactly: color.components.red * 255), let green = UInt8(exactly: color.components.green * 255), let blue = UInt8(exactly: color.components.blue * 255) {
+            
+            let payload: [UInt8] = [0x56, red, green, blue, 0x00, 0xF0, 0xAA]
+            let data = Data(bytes: payload, count: 7)
+            peripheral.writeValue(data, for: ffd9, type: .withoutResponse)
+            
+            persist(light: light, withMethod: .put)
+        }
     }
 }

@@ -11,7 +11,7 @@ import SwiftUI
 struct EffectsRow: View {
     var body: some View {
         ZStack(alignment: .leading){
-            BackgroundView(gradientColors: [.red, .blue])
+            BackgroundView(gradientColors: [Color(red: 1, green: 0, blue: 0), .blue])
             
             Text("Lighting Effects")
                 .font(.system(size: 25, weight: .semibold, design: .rounded))

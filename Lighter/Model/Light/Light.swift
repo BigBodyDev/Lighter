@@ -7,24 +7,25 @@
 //
 
 import Foundation
-import SwiftUI
+import CoreBluetooth
+import UIKit
 
-class Light: ObservableObject {
-    static var `default` = Light(peripheralName: "Triones Light", peripheralUUID: UUID())
+class Light: ObservableObject, Equatable {
+    static var `default` = Light()
     
-    enum State: Int{
+    enum State: Double{
         case off = 0
         case color = 1
         case effect = 2
     }
     
-    enum Status: Int{
+    enum Status: Double{
         case unregistered = 0
         case disconnected = 1
         case connected = 2
     }
     
-    enum Effect: Int{
+    enum Effect: Double{
         case allFade = 0
         case redFade = 1
         case greenFade = 2
@@ -51,91 +52,118 @@ class Light: ObservableObject {
     }
     
 //    Identification
-    var registeredName: String!
-    
-    fileprivate var _peripheralName: String!
-    fileprivate var _peripheralUUID: UUID!
-    var peripheralName: String{
-        return _peripheralName
-    }
-    var peripheralUUID: UUID{
-        return _peripheralUUID
-    }
+    @Published private(set) var registeredName: String!
+    @Published private(set) var peripheralName: String!
+    @Published private(set) var peripheralUUID: UUID!
     
 //    State/Status
-    var state: State!
-    
-    fileprivate var _status: Status!
-    var status: Status{
-        return _status
-    }
+    @Published private(set) var state: State!
+    @Published private(set) var status: Status!
     
 //    Configuration
-    var color: Color?
-    var effect: Effect?
-    var speed: Int?
+    @Published private(set) var color: UIColor?
+    @Published private(set) var effect: Effect?
+    @Published private(set) var speed: Double?
     
-//    Unregistered Initialization
-    init(peripheralName: String, peripheralUUID: UUID){
-        self._peripheralName = peripheralName
-        self._peripheralUUID = peripheralUUID
+    
+//    Basic Initialization
+    init(){
+        self.peripheralName = String()
+        self.peripheralUUID = UUID()
         self.registeredName = "New Light"
         
         self.state = .off
-        self._status = .unregistered
+        self.status = .unregistered
     }
     
-//    Registered Initialization
-    init(peripheralName: String, peripheralUUID: UUID, registeredName: String, state: State, status: Status, color: Color?, effect: Effect?, speed: Int?){
-        self._peripheralName = peripheralName
-        self._peripheralUUID = peripheralUUID
-        self.registeredName = registeredName
+//    Unregistered Initialization
+    init(peripheral: CBPeripheral){
+        self.peripheralName = peripheral.name ?? "Triones"
+        self.peripheralUUID = peripheral.identifier
+        self.registeredName = "New Light"
         
-        self.state = state
-        self._status = status
+        self.state = .off
+        self.status = .unregistered
+    }
+    
+//    Disconnected Initialization
+    init(cdm: CDMLight){
+        self.peripheralName = cdm.peripheralName ?? "Triones"
+        self.peripheralUUID = cdm.peripheralUUID
+        self.registeredName = cdm.registeredName ?? "New Light"
         
+        self.state = State(rawValue: cdm.state) ?? .off
+        self.status = .disconnected
+        
+        self.color = UIColor(red: CGFloat(cdm.red), green: CGFloat(cdm.green), blue: CGFloat(cdm.blue), alpha: 1)
+        self.effect = Effect(rawValue: cdm.effect)
+        self.speed = cdm.speed
+    }
+    
+//    Function to link the disconnected CDMLight with the light peripheral
+    func link(withPeripheral peripheral: CBPeripheral){
+        self.peripheralName = peripheral.name
+        self.peripheralUUID = peripheral.identifier
+        
+        self.status = .connected
+        LightManager.shared.objectWillChange.send()
+    }
+    
+//    Function to remove the CDM copy of the light and add reset the light to just a peripheral
+    func removeFromMemory(){
+        self.registeredName = "New Light"
+        
+        self.state = .off
+        self.status = .unregistered
+        
+        self.color = nil
+        self.effect = nil
+        self.speed = nil
+        
+        LightManager.shared.persist(light: self, withMethod: .delete)
+        LightManager.shared.objectWillChange.send()
+    }
+    
+    func changeLightName(_ newName: String){
+        self.registeredName = newName
+        if self.status == .unregistered{
+            self.status = self.peripheralName == String() ? .disconnected : .connected
+            LightManager.shared.persist(light: self, withMethod: .post)
+        }else{
+            LightManager.shared.persist(light: self, withMethod: .put)
+        }
+        LightManager.shared.objectWillChange.send()
+    }
+    
+    func toggle(){
+        self.setLightState(toOff: self.state != .off)
+    }
+    
+    func setLightState(toOff: Bool){
+        if !toOff{
+            if self.effect == nil {
+                self.state = .color
+            }else {
+                self.state = .effect
+            }
+        }else{
+            self.state = .off
+        }
+        
+        LightManager.shared.setLightState(light: self, toOff: toOff)
+        LightManager.shared.objectWillChange.send()
+    }
+    
+    func setColor(color: UIColor){
+        self.effect = nil
         self.color = color
-        self.effect = effect
-        self.speed = speed
+        
+        LightManager.shared.setColor(light: self, color: color)
+        LightManager.shared.objectWillChange.send()
     }
     
-    func registerLight(){
-        self._status = .connected
-    } 
     
-//    init(peripheralName: String, peripheralUUID: UUID){
-//        self._peripheralName = peripheralName
-//        self._peripheralUUID = peripheralUUID
-//        self._state = .off
-//        self._connection = .unregistered
-//    }
-//
-//    init(peripheralName: String, peripheralUUID: UUID, registeredName: String){
-//        self._peripheralName = peripheralName
-//        self._peripheralUUID = peripheralUUID
-//        self.registeredName = registeredName
-//        self._state = .off
-//        self._connection = .disconnected
-//    }
-//
-//    init(peripheralName: String, peripheralUUID: UUID, bytes: [Byte]){
-//        self._peripheralName = peripheralName
-//        self._peripheralUUID = peripheralUUID
-//
-//        if let power = bytes.first(where: { $0.type == .power }), let mode = bytes.first(where: { $0.type == .mode }){
-//            if power.interpretedValue == 0 {
-//                self._state = .off
-//            }else if mode.interpretedValue == 0 {
-//                self._state = .color
-//            }else if mode.interpretedValue == 1 {
-//                self._state = .effect
-//            }
-//        }
-//
-//        if let red = bytes.first(where: { $0.type == .red }), let green = bytes.first(where: { $0.type == .green }), let blue = bytes.first(where: { $0.type == .blue }){
-//            self._color = Color(red: Double(red.intValue), green: Double(green.intValue), blue: Double(blue.intValue))
-//        }
-//
-//        self._connection = .connected
-//    }
+    static func == (lhs: Light, rhs: Light) -> Bool {
+        lhs.peripheralUUID == rhs.peripheralUUID
+    }
 }

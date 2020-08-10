@@ -12,57 +12,82 @@ import CoreBluetooth
 struct LightItem: View {
     @EnvironmentObject var manager: LightManager
     @Binding var light: Light
+    @Binding var linkedLights: [Light]
     
-    @State var showAlert: Bool = false
+    @State var showRegistration: Bool = false
     
     var body: some View {
         VStack(spacing: 5){
             ZStack{
-                BackgroundView()
-
-                AlertControlView(textString: self.$light.registeredName, showAlert: self.$showAlert, title: light.status == .unregistered ? "Add light to collection" : "Edit light name", message: light.status == .unregistered ? "Enter the name of this light to control it" : "Change the name of this light", placeholder: "New Light") {
-                    
-                    self.light.status == .unregistered ? self.manager.registerLight(light: self.light) : self.manager.saveLight(light: self.light)
-                }
-
+                
+                BackgroundView(color: self.linkedLights.contains(self.light) ? .blue : nil)
+                
                 ZStack(alignment: .center){
                     Image(systemName: light.state == .off ? "lightbulb" : "lightbulb.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(Color(light.color ?? .white))
+                        .padding(30)
+                    
+                    Image(systemName: "lightbulb")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.white)
                     .padding(30)
-                        .foregroundColor(light.color ?? .white)
-
+                    
                     Group{
                         Circle()
                             .stroke(Color.white, lineWidth: 5)
-
+                        
                         Circle()
                             .fill(light.status == .unregistered ? Color.red : light.status == .disconnected ? Color.yellow : Color.green)
                     }
-                        .frame(width: 15, height: 15)
-                        .padding(.leading, 25)
+                    .frame(width: 15, height: 15)
+                    .padding(.leading, 25)
                         .padding(.top, -25)
                 }
             }
             .frame(width: 100, height: 100)
-            .onTapGesture(count: 2, perform: {
-                self.showAlert.toggle()
-            })
-                .onTapGesture(count: 1) {
-                    if self.light.status == .unregistered {
-                        
+            .onTapGesture(count: 2) {
+                self.showRegistration.toggle()
+            }
+            .onTapGesture(count: 1) {
+                if self.light.status == .unregistered {
+                    
+                }else if self.linkedLights.contains(self.light){
+                    let condition = !self.linkedLights.contains(where: { $0.state == .off })
+                    for index in self.manager.lights.indices {
+                        if self.linkedLights.contains(self.manager.lights[index]) {
+                            self.manager.lights[index].setLightState(toOff: condition)
+                        }
                     }
+                }else{
+                    self.light.toggle()
+                }
+            }
+            .onLongPressGesture {
+                if self.light.status == .unregistered {
+                    self.showRegistration.toggle()
+                }else if let index = self.linkedLights.firstIndex(of: self.light){
+                    self.linkedLights.remove(at: index)
+                }else{
+                    self.linkedLights.append(self.light)
+                }
             }
 
             Text(light.registeredName)
                 .font(.footnote)
                 .frame(height: 20)
         }
+        .sheet(isPresented: self.$showRegistration) {
+            LightRegistrationHost(light: self.$light, lightName: self.light.registeredName == "New Light" ? String() : self.light.registeredName, showRegistration: self.$showRegistration)
+                .environmentObject(self.manager)
+        }
     }
 }
 
 struct LightItem_Previews: PreviewProvider {
     static var previews: some View {
-        LightItem(light: .constant(.default))
+        LightItem(light: .constant(.default), linkedLights: .constant([]))
     }
 }

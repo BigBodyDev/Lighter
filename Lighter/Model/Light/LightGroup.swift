@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import SwiftUI
+import UIKit
 
 class LightGroup: ObservableObject  {
     static var `default` = LightGroup()
@@ -33,16 +33,16 @@ class LightGroup: ObservableObject  {
     }
     
 //    Configuration
-    fileprivate var _color: Color?
+    fileprivate var _color: UIColor?
     fileprivate var _effect: Light.Effect?
-    fileprivate var _speed: Int?
-    var color: Color?{
+    fileprivate var _speed: Double?
+    var color: UIColor?{
         return _color
     }
     var effect: Light.Effect?{
         return _effect
     }
-    var speed: Int?{
+    var speed: Double?{
         return _speed
     }
 

@@ -11,12 +11,14 @@ import SwiftUI
 struct MainHost: View {
     @EnvironmentObject var manager: LightManager
     
+    @State var linkedLights: [Light] = [Light]()
+    
     var body: some View {
         NavigationView {
             List {
                 
                 Group{
-                    LightsRow(lights: self.$manager.lights)
+                    LightsRow(lights: self.$manager.lights, linkedLights: self.$linkedLights)
                         .padding(.horizontal, -20)
                     
                     GroupsRow(groups: self.$manager.groups)
@@ -27,7 +29,7 @@ struct MainHost: View {
                             .buttonStyle(PlainButtonStyle())
                     }
                     
-                    ColorsView()
+                    ColorsView(linkedLights: self.$linkedLights)
                     .padding(.horizontal, -20)
                 }
                 .padding(.bottom, 15)

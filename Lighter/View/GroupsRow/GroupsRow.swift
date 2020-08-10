@@ -14,7 +14,7 @@ struct GroupsRow: View {
     var body: some View {
         VStack(alignment: .leading){
             Text("Light Groups")
-                .font(.headline)
+                .font(.system(size: 22, weight: .semibold, design: .rounded))
                 .padding(.horizontal, 25)
             
             ScrollView(.horizontal, showsIndicators: false) {

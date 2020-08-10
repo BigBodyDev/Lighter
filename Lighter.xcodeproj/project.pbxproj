@@ -31,7 +31,6 @@
 		CE097A5A24CE98FC0014A4DE /* LighterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE097A5924CE98FC0014A4DE /* LighterTests.swift */; };
 		CE097A6524CE98FC0014A4DE /* LighterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE097A6424CE98FC0014A4DE /* LighterUITests.swift */; };
 		CE097A7924CE99280014A4DE /* LightGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE097A7524CE99280014A4DE /* LightGroup.swift */; };
-		CE097A7B24CE99280014A4DE /* Bluetooth.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE097A7724CE99280014A4DE /* Bluetooth.swift */; };
 		CE097A7C24CE99280014A4DE /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE097A7824CE99280014A4DE /* Light.swift */; };
 		CE097A8724CE99330014A4DE /* LightItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE097A7F24CE99330014A4DE /* LightItem.swift */; };
 		CE097A8824CE99330014A4DE /* LightsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE097A8024CE99330014A4DE /* LightsRow.swift */; };
@@ -45,8 +44,8 @@
 		CE329DD824CFD0DC00AC6806 /* EffectsHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE329DD724CFD0DC00AC6806 /* EffectsHost.swift */; };
 		CE428F8524D8E09B00E10C9C /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE428F8424D8E09B00E10C9C /* CoreDataManager.swift */; };
 		CE428F8724D8E0A800E10C9C /* CoreBluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE428F8624D8E0A800E10C9C /* CoreBluetoothManager.swift */; };
-		CEAE40E324D8F7F200709F7E /* SwiftUI+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAE40E224D8F7F200709F7E /* SwiftUI+Color.swift */; };
-		CEB3E55924D36F4500DDBDAD /* Byte.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB3E55824D36F4500DDBDAD /* Byte.swift */; };
+		CE79FC0324E08E05003F0572 /* LightRegistrationHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE79FC0224E08E05003F0572 /* LightRegistrationHost.swift */; };
+		CEAE40E324D8F7F200709F7E /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAE40E224D8F7F200709F7E /* Colors.swift */; };
 		CEB3E55B24D3E8F700DDBDAD /* SwiftUIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB3E55A24D3E8F700DDBDAD /* SwiftUIAlertController.swift */; };
 /* End PBXBuildFile section */
 
@@ -98,7 +97,6 @@
 		CE097A6424CE98FC0014A4DE /* LighterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LighterUITests.swift; sourceTree = "<group>"; };
 		CE097A6624CE98FC0014A4DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE097A7524CE99280014A4DE /* LightGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightGroup.swift; sourceTree = "<group>"; };
-		CE097A7724CE99280014A4DE /* Bluetooth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bluetooth.swift; sourceTree = "<group>"; };
 		CE097A7824CE99280014A4DE /* Light.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Light.swift; sourceTree = "<group>"; };
 		CE097A7F24CE99330014A4DE /* LightItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightItem.swift; sourceTree = "<group>"; };
 		CE097A8024CE99330014A4DE /* LightsRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightsRow.swift; sourceTree = "<group>"; };
@@ -112,8 +110,8 @@
 		CE329DD724CFD0DC00AC6806 /* EffectsHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsHost.swift; sourceTree = "<group>"; };
 		CE428F8424D8E09B00E10C9C /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		CE428F8624D8E0A800E10C9C /* CoreBluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreBluetoothManager.swift; sourceTree = "<group>"; };
-		CEAE40E224D8F7F200709F7E /* SwiftUI+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+Color.swift"; sourceTree = "<group>"; };
-		CEB3E55824D36F4500DDBDAD /* Byte.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Byte.swift; sourceTree = "<group>"; };
+		CE79FC0224E08E05003F0572 /* LightRegistrationHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightRegistrationHost.swift; sourceTree = "<group>"; };
+		CEAE40E224D8F7F200709F7E /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		CEB3E55A24D3E8F700DDBDAD /* SwiftUIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIAlertController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -252,8 +250,6 @@
 		CE097A7424CE99280014A4DE /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				CE097A7724CE99280014A4DE /* Bluetooth.swift */,
-				CEB3E55824D36F4500DDBDAD /* Byte.swift */,
 				CE428F8824D8E0C700E10C9C /* Managers */,
 				CE428F8924D8E0D500E10C9C /* Light */,
 			);
@@ -264,13 +260,14 @@
 			isa = PBXGroup;
 			children = (
 				CE097A8E24CE99B40014A4DE /* MainHost.swift */,
+				CE79FC0224E08E05003F0572 /* LightRegistrationHost.swift */,
 				CE097A7E24CE99330014A4DE /* Lights Row */,
 				CE097A8324CE99330014A4DE /* GroupsRow */,
 				CE329DD624CFD0D000AC6806 /* Effects */,
 				CE097A8524CE99330014A4DE /* ColorsView */,
 				CE097A8124CE99330014A4DE /* BackgroundView.swift */,
 				CEB3E55A24D3E8F700DDBDAD /* SwiftUIAlertController.swift */,
-				CEAE40E224D8F7F200709F7E /* SwiftUI+Color.swift */,
+				CEAE40E224D8F7F200709F7E /* Colors.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -355,6 +352,8 @@
 			dependencies = (
 			);
 			name = Lighter;
+			packageProductDependencies = (
+			);
 			productName = Lighter;
 			productReference = CE097A3C24CE98FB0014A4DE /* Lighter.app */;
 			productType = "com.apple.product-type.application";
@@ -427,6 +426,8 @@
 				Base,
 			);
 			mainGroup = CE097A3324CE98FB0014A4DE;
+			packageReferences = (
+			);
 			productRefGroup = CE097A3D24CE98FB0014A4DE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -482,7 +483,6 @@
 				CE329DD524CFB29900AC6806 /* GroupItem.swift in Sources */,
 				CE063C9424CFD24300C6C855 /* Grid.swift in Sources */,
 				CE063C8724CFD24300C6C855 /* StaggeredGridStyle.swift in Sources */,
-				CEB3E55924D36F4500DDBDAD /* Byte.swift in Sources */,
 				CE063C9224CFD24300C6C855 /* ModularGridStyle.swift in Sources */,
 				CE097A8B24CE99330014A4DE /* GroupsRow.swift in Sources */,
 				CE063C9024CFD24300C6C855 /* EnvironmentValues+GridStyle.swift in Sources */,
@@ -491,13 +491,13 @@
 				CE063C8824CFD24300C6C855 /* Tracks.swift in Sources */,
 				CEB3E55B24D3E8F700DDBDAD /* SwiftUIAlertController.swift in Sources */,
 				CE063C9324CFD24300C6C855 /* GridItem.swift in Sources */,
+				CE79FC0324E08E05003F0572 /* LightRegistrationHost.swift in Sources */,
 				CE063C8F24CFD24300C6C855 /* GridPreferencesModifier.swift in Sources */,
 				CE097A8A24CE99330014A4DE /* EffectsRow.swift in Sources */,
 				CE063C8624CFD24300C6C855 /* Grid+Inits.swift in Sources */,
 				CE097A8724CE99330014A4DE /* LightItem.swift in Sources */,
 				CE097A7C24CE99280014A4DE /* Light.swift in Sources */,
 				CE063C8B24CFD24300C6C855 /* GridPreferencesKey.swift in Sources */,
-				CE097A7B24CE99280014A4DE /* Bluetooth.swift in Sources */,
 				CE097A8C24CE99330014A4DE /* ColorsView.swift in Sources */,
 				CE063C9124CFD24300C6C855 /* GridItemBoundsPreferencesKey.swift in Sources */,
 				CE097A8F24CE99B40014A4DE /* MainHost.swift in Sources */,
@@ -505,7 +505,7 @@
 				CE428F8524D8E09B00E10C9C /* CoreDataManager.swift in Sources */,
 				CE063C8A24CFD24300C6C855 /* GridStyle.swift in Sources */,
 				CE428F8724D8E0A800E10C9C /* CoreBluetoothManager.swift in Sources */,
-				CEAE40E324D8F7F200709F7E /* SwiftUI+Color.swift in Sources */,
+				CEAE40E324D8F7F200709F7E /* Colors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
