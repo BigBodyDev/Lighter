@@ -14,7 +14,7 @@ class Light: ObservableObject, Equatable {
     static var `default` = Light()
     
     enum State: Double{
-        case off = 0
+        case neutral = 0
         case color = 1
         case effect = 2
     }
@@ -25,44 +25,19 @@ class Light: ObservableObject, Equatable {
         case connected = 2
     }
     
-    enum Effect: Double{
-        case allFade = 0
-        case redFade = 1
-        case greenFade = 2
-        case blueFade = 3
-        case yellowFade = 4
-        case tealFade = 5
-        case purpleFade = 6
-        case whiteFade = 7
-        
-        case redGreenFade = 8
-        case redBlueFade = 9
-        case greenBlueFade = 10
-        
-        case allFlash = 11
-        case redFlash = 12
-        case greenFlash = 13
-        case blueFlash = 14
-        case yellowFlash = 15
-        case tealFlash = 16
-        case purpleFlash = 17
-        case whiteFlash = 18
-        
-        case allJump = 19
-    }
-    
 //    Identification
     @Published private(set) var registeredName: String!
     @Published private(set) var peripheralName: String!
     @Published private(set) var peripheralUUID: UUID!
     
 //    State/Status
+    @Published private(set) var isOn: Bool!
     @Published private(set) var state: State!
     @Published private(set) var status: Status!
     
 //    Configuration
     @Published private(set) var color: UIColor?
-    @Published private(set) var effect: Effect?
+    @Published private(set) var effect: Effect.EffectValues?
     @Published private(set) var speed: Double?
     
     
@@ -72,7 +47,8 @@ class Light: ObservableObject, Equatable {
         self.peripheralUUID = UUID()
         self.registeredName = "New Light"
         
-        self.state = .off
+        self.isOn = false
+        self.state = .neutral
         self.status = .unregistered
     }
     
@@ -82,7 +58,8 @@ class Light: ObservableObject, Equatable {
         self.peripheralUUID = peripheral.identifier
         self.registeredName = "New Light"
         
-        self.state = .off
+        self.isOn = false
+        self.state = .neutral
         self.status = .unregistered
     }
     
@@ -92,11 +69,12 @@ class Light: ObservableObject, Equatable {
         self.peripheralUUID = cdm.peripheralUUID
         self.registeredName = cdm.registeredName ?? "New Light"
         
-        self.state = State(rawValue: cdm.state) ?? .off
+        self.isOn = cdm.isOn
+        self.state = State(rawValue: cdm.state) ?? .neutral
         self.status = .disconnected
         
         self.color = UIColor(red: CGFloat(cdm.red), green: CGFloat(cdm.green), blue: CGFloat(cdm.blue), alpha: 1)
-        self.effect = Effect(rawValue: cdm.effect)
+        self.effect = Effect.effect(withIndex: cdm.effect)
         self.speed = cdm.speed
     }
     
@@ -113,7 +91,8 @@ class Light: ObservableObject, Equatable {
     func removeFromMemory(){
         self.registeredName = "New Light"
         
-        self.state = .off
+        self.isOn = false
+        self.state = .neutral
         self.status = .unregistered
         
         self.color = nil
@@ -136,29 +115,34 @@ class Light: ObservableObject, Equatable {
     }
     
     func toggle(){
-        self.setLightState(toOff: self.state != .off)
+        self.isOn = !self.isOn
+        
+        LightManager.shared.setPower(light: self, isOn: self.isOn)
+        LightManager.shared.objectWillChange.send()
     }
     
-    func setLightState(toOff: Bool){
-        if !toOff{
-            if self.effect == nil {
-                self.state = .color
-            }else {
-                self.state = .effect
-            }
-        }else{
-            self.state = .off
-        }
+    func setPower(isOn: Bool){
+        self.isOn = isOn
         
-        LightManager.shared.setLightState(light: self, toOff: toOff)
+        LightManager.shared.setPower(light: self, isOn: isOn)
         LightManager.shared.objectWillChange.send()
     }
     
     func setColor(color: UIColor){
         self.effect = nil
         self.color = color
+        self.state = .color
         
         LightManager.shared.setColor(light: self, color: color)
+        LightManager.shared.objectWillChange.send()
+    }
+    
+    func setEffect(effect: Effect.EffectValues){
+        self.color = nil
+        self.effect = effect
+        self.state = .effect
+        
+        LightManager.shared.setEffect(light: self, effect: effect)
         LightManager.shared.objectWillChange.send()
     }
     

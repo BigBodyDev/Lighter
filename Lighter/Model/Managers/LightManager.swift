@@ -54,11 +54,11 @@ class LightManager: NSObject, ObservableObject, CoreBluetoothManagerDelegate{
         dataManager.persist(group: group, withMethod: method)
     }
     
-    func setLightState(light: Light, toOff: Bool){
+    func setPower(light: Light, isOn: Bool){
         let items = Self.writingItems(forLight: light, withServiceID: .serviceFFD5, withCharacteristicID: .characteristicFFD9)
         
         if let peripheral = items.peripheral, let ffd9 = items.characteristic{
-            let payload: [UInt8] = [0xCC, toOff ? 0x24 : 0x23, 0x33]
+            let payload: [UInt8] = [0xCC, isOn ? 0x23 : 0x24, 0x33]
             let data = Data(bytes: payload, count: 3)
             peripheral.writeValue(data, for: ffd9, type: .withoutResponse)
             
@@ -73,6 +73,19 @@ class LightManager: NSObject, ObservableObject, CoreBluetoothManagerDelegate{
             
             let payload: [UInt8] = [0x56, red, green, blue, 0x00, 0xF0, 0xAA]
             let data = Data(bytes: payload, count: 7)
+            peripheral.writeValue(data, for: ffd9, type: .withoutResponse)
+            
+            persist(light: light, withMethod: .put)
+        }
+    }
+    
+    func setEffect(light: Light, effect: Effect.EffectValues){
+        let items = Self.writingItems(forLight: light, withServiceID: .serviceFFD5, withCharacteristicID: .characteristicFFD9)
+        
+        if let peripheral = items.peripheral, let ffd9 = items.characteristic {
+            
+            let payload: [UInt8] = [0xBB, 0x25 + UInt8(effect.index), 0x05, 0x44]
+            let data = Data(bytes: payload, count: 4)
             peripheral.writeValue(data, for: ffd9, type: .withoutResponse)
             
             persist(light: light, withMethod: .put)

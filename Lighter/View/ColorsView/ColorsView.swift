@@ -13,38 +13,38 @@ import SwiftUI
 struct ColorsView: View {
     @Binding var linkedLights: [Light]
     @State var colors : [UIColor] = [
-        .systemRed,
+        .red,
         .systemOrange,
         .systemYellow,
-        .systemGreen,
+        .green,
         .systemBlue,
         .systemPurple,
         .systemPink,
-        .systemRed,
+        .red,
         .systemOrange,
         .systemYellow,
-        .systemGreen,
+        .green,
         .systemBlue,
         .systemPurple,
         .systemPink,
-        .systemRed,
+        .red,
         .systemOrange,
         .systemYellow,
-        .systemGreen,
+        .green,
         .systemBlue,
         .systemPurple,
         .systemPink,
-        .systemRed,
+        .red,
         .systemOrange,
         .systemYellow,
-        .systemGreen,
+        .green,
         .systemBlue,
         .systemPurple,
         .systemPink,
-        .systemRed,
+        .red,
         .systemOrange,
         .systemYellow,
-        .systemGreen,
+        .green,
         .systemBlue,
         .systemPurple,
         .systemPink
@@ -53,13 +53,34 @@ struct ColorsView: View {
     func itemForCoordinates(x: Int, y: Int) -> some View{
         let index = (y * 6) + x
         
+        var showIndication: Bool{
+            if index < self.colors.count{
+                var count = 0
+                for light in linkedLights{
+                    if let components = light.color?.components, components == self.colors[index].components, light.state == .color{
+                        count += 1
+                    }
+                }
+                return linkedLights.count != 0 && linkedLights.count == count
+            }
+            return false
+        }
+        
         return Group{
             if index < self.colors.count{
-                BackgroundView(color: Color(self.colors[index]))
-                    .onTapGesture {
-                        for x in self.linkedLights.indices{
-                            self.linkedLights[x].setColor(color: self.colors[index])
-                        }
+                ZStack{
+                    BackgroundView(color: Color(self.colors[index]))
+                        .onTapGesture {
+                            for x in self.linkedLights.indices{
+                                self.linkedLights[x].setColor(color: self.colors[index])
+                            }
+                    }
+                    
+                    if showIndication{
+                        Circle()
+                            .fill(Color.white)
+                            .padding(15)
+                    }
                 }
             }else{
                 BackgroundView(color: .clear)

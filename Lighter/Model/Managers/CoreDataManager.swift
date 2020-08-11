@@ -50,13 +50,14 @@ class CoreDataManager: NSObject{
             cdm.peripheralUUID = light.peripheralUUID
             cdm.registeredName = light.registeredName
             
+            cdm.isOn = light.isOn
             cdm.state = light.state.rawValue
             
             cdm.red = Double(light.color?.components.red ?? 1)
             cdm.green = Double(light.color?.components.green ?? 1)
             cdm.blue = Double(light.color?.components.blue ?? 1)
             
-            cdm.effect = light.effect?.rawValue ?? 0
+            cdm.effect = light.effect?.index ?? 0
             cdm.speed = light.speed ?? 0
             
             appDelegate?.saveContext()
@@ -66,13 +67,14 @@ class CoreDataManager: NSObject{
             
             self.lights[index].registeredName = light.registeredName
             
+            self.lights[index].isOn = light.isOn
             self.lights[index].state = light.state.rawValue
             
             self.lights[index].red = Double(light.color?.components.red ?? 1)
             self.lights[index].green = Double(light.color?.components.green ?? 1)
             self.lights[index].blue = Double(light.color?.components.blue ?? 1)
             
-            self.lights[index].effect = light.effect?.rawValue ?? 0
+            self.lights[index].effect = light.effect?.index ?? 0
             self.lights[index].speed = light.speed ?? 0
             
             appDelegate?.saveContext()
@@ -94,13 +96,14 @@ class CoreDataManager: NSObject{
             cdm.name = group.name
             cdm.uuid = group.UUID
             
+            cdm.isOn = group.isOn
             cdm.state = group.state.rawValue
             
             cdm.red = Double(group.color?.components.red ?? 1)
             cdm.green = Double(group.color?.components.green ?? 1)
             cdm.blue = Double(group.color?.components.blue ?? 1)
             
-            cdm.effect = group.effect?.rawValue ?? 0
+            cdm.effect = group.effect?.index ?? 0
             cdm.speed = group.speed ?? 0
             
             for light in group.lights{
@@ -115,13 +118,14 @@ class CoreDataManager: NSObject{
             
             self.groups[index].name = group.name
             
+            self.groups[index].isOn = group.isOn
             self.groups[index].state = group.state.rawValue
             
             self.groups[index].red = Double(group.color?.components.red ?? 1)
             self.groups[index].green = Double(group.color?.components.green ?? 1)
             self.groups[index].blue = Double(group.color?.components.blue ?? 1)
             
-            self.groups[index].effect = group.effect?.rawValue ?? 0
+            self.groups[index].effect = group.effect?.index ?? 0
             self.groups[index].speed = group.speed ?? 0
             
             self.groups[index].removeFromLights(self.groups[index].lights ?? NSSet())

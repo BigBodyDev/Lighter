@@ -23,17 +23,19 @@ struct LightItem: View {
                 BackgroundView(color: self.linkedLights.contains(self.light) ? .blue : nil)
                 
                 ZStack(alignment: .center){
-                    Image(systemName: light.state == .off ? "lightbulb" : "lightbulb.fill")
+                    if light.status == .connected {
+                        Image(systemName: light.isOn ? "lightbulb.fill" : "lightbulb")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(Color(light.color ?? .white))
+                            .frame(width: 30, height: 40)
+                    }
+                    
+                    Image(systemName: light.status != .connected ? "lightbulb.slash" : "lightbulb")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .foregroundColor(Color(light.color ?? .white))
-                        .padding(30)
-                    
-                    Image(systemName: "lightbulb")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.white)
-                    .padding(30)
+                        .foregroundColor(.white)
+                        .frame(width: 30, height: 40)
                     
                     Group{
                         Circle()
@@ -53,12 +55,13 @@ struct LightItem: View {
             }
             .onTapGesture(count: 1) {
                 if self.light.status == .unregistered {
-                    
+                    self.showRegistration.toggle()
                 }else if self.linkedLights.contains(self.light){
-                    let condition = !self.linkedLights.contains(where: { $0.state == .off })
+                    let condition = self.linkedLights.contains(where: { !$0.isOn })
+                    
                     for index in self.manager.lights.indices {
                         if self.linkedLights.contains(self.manager.lights[index]) {
-                            self.manager.lights[index].setLightState(toOff: condition)
+                            self.manager.lights[index].setPower(isOn: condition)
                         }
                     }
                 }else{

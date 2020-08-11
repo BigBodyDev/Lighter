@@ -13,44 +13,21 @@ class LightGroup: ObservableObject  {
     static var `default` = LightGroup()
     
 //    Identification
-    fileprivate var _name: String!
-    fileprivate var _UUID: UUID!
-    var name: String{
-        return _name
-    }
-    var UUID: UUID{
-        return _UUID
-    }
+    private(set) var name: String!
+    private(set) var UUID: UUID!
     
 //    State/Status
-    fileprivate var _state: Light.State!
-    fileprivate var _status: Light.Status!
-    var state: Light.State{
-        return _state
-    }
-    var status: Light.Status{
-        return _status
-    }
+    private(set) var isOn: Bool!
+    private(set) var state: Light.State!
+    private(set) var status: Light.Status!
     
 //    Configuration
-    fileprivate var _color: UIColor?
-    fileprivate var _effect: Light.Effect?
-    fileprivate var _speed: Double?
-    var color: UIColor?{
-        return _color
-    }
-    var effect: Light.Effect?{
-        return _effect
-    }
-    var speed: Double?{
-        return _speed
-    }
+    private(set) var color: UIColor?
+    private(set) var effect: Effect.EffectValues?
+    private(set) var speed: Double?
 
 //    Lights
-    fileprivate var _lights = [Light]()
-    var lights: [Light]{
-        return _lights
-    }
+    private(set) var lights = [Light]()
     
 //    init(name: String?) {
 //        self._name = name
