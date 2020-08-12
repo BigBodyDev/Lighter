@@ -10,14 +10,7 @@ import Foundation
 import UIKit
 
 class Effect{
-    typealias EffectValues = (index: Double, colors: [UIColor], EffectIconType)
-    
-    enum EffectIconType: Int{
-        case wheel = 0
-        case diagnol = 1
-        case wheelGradient = 2
-        case diagnolGradient = 3
-    }
+    typealias EffectValues = (index: Double, colors: [UIColor], iconType: ColorIconType)
     
     static func effect(withIndex index: Double) -> EffectValues {
         switch index {
@@ -72,39 +65,40 @@ class Effect{
 class Fade: Effect {
     static let values: [EffectValues] = [Fade.all, Fade.red, Fade.green, Fade.blue, Fade.yellow, Fade.cyan, Fade.purple, Fade.white]
     
-    static let all: EffectValues = (0, [.red, .orange, .yellow, .green, .blue, .purple], .wheelGradient)
-    static let red: EffectValues = (1, [.red, .black], .diagnolGradient)
-    static let green: EffectValues = (2, [.green, .black], .diagnolGradient)
-    static let blue: EffectValues = (3, [.systemBlue, .black], .diagnolGradient)
-    static let yellow: EffectValues = (4, [.systemYellow, .black], .diagnolGradient)
-    static let cyan: EffectValues = (5, [.cyan, .black], .diagnolGradient)
-    static let purple: EffectValues = (6, [.systemPurple, .black], .diagnolGradient)
-    static let white: EffectValues = (7, [.white, .black], .diagnolGradient)
+    static let all: EffectValues = (0, [.systemRed, .systemOrange, .systemYellow, .systemGreen, .systemBlue, .systemPurple, .systemPink, .systemRed], .wheelGradient)
+    static let red: EffectValues = (1, [.systemRed, .black, .black], .twoGradient)
+    static let green: EffectValues = (2, [.systemGreen, .black, .black], .twoGradient)
+    static let blue: EffectValues = (3, [.systemBlue, .black, .black], .twoGradient)
+    static let yellow: EffectValues = (4, [.systemYellow, .black, .black], .twoGradient)
+    static let cyan: EffectValues = (5, [.systemTeal, .black, .black], .twoGradient)
+    static let purple: EffectValues = (6, [.systemPurple, .black, .black], .twoGradient)
+    static let white: EffectValues = (7, [.white, .black, .black], .twoGradient)
 }
 
 class CrossFade: Effect {
     static let values: [EffectValues] = [CrossFade.redGreen, CrossFade.redBlue, CrossFade.greenBlue]
     
-    static let redGreen: EffectValues = (8, [.red, .green], .diagnolGradient)
-    static let redBlue: EffectValues = (9, [.red, .blue], .diagnolGradient)
-    static let greenBlue: EffectValues = (10, [.green, .blue], .diagnolGradient)
+    static let redGreen: EffectValues = (8, [.systemRed, .systemGreen], .twoGradient)
+    static let redBlue: EffectValues = (9, [.systemRed, .systemBlue], .twoGradient)
+    static let greenBlue: EffectValues = (10, [.systemGreen, .systemBlue], .twoGradient)
 }
 
 class Flash: Effect {
+    private static let darkGray = UIColor(white: 0.1, alpha: 1)
     static let values: [EffectValues] = [Flash.all, Flash.red, Flash.green, Flash.blue, Flash.yellow, Flash.cyan, Flash.purple, Flash.white]
     
-    static let all: EffectValues = (11, [.red, .orange, .yellow, .green, .blue, .purple], .diagnol)
-    static let red: EffectValues = (12, [.red, .black], .diagnol)
-    static let green: EffectValues = (13, [.green, .black], .diagnol)
-    static let blue: EffectValues = (14, [.systemBlue, .black], .diagnol)
-    static let yellow: EffectValues = (15, [.systemYellow, .black], .diagnol)
-    static let cyan: EffectValues = (16, [.cyan, .black], .diagnol)
-    static let purple: EffectValues = (17, [.systemPurple, .black], .diagnol)
-    static let white: EffectValues = (18, [.white, .black], .diagnol)
+    static let all: EffectValues = (11, [.systemRed, .systemRed, .systemOrange, .systemYellow, .systemGreen, .systemBlue, .systemPurple, .systemPurple], .slices)
+    static let red: EffectValues = (12, [.systemRed, darkGray], .twoSolid)
+    static let green: EffectValues = (13, [.systemGreen, darkGray], .twoSolid)
+    static let blue: EffectValues = (14, [.systemBlue, darkGray], .twoSolid)
+    static let yellow: EffectValues = (15, [.systemYellow, darkGray], .twoSolid)
+    static let cyan: EffectValues = (16, [.systemTeal, darkGray], .twoSolid)
+    static let purple: EffectValues = (17, [.systemPurple, darkGray], .twoSolid)
+    static let white: EffectValues = (18, [.white, darkGray], .twoSolid)
 }
 
 class Jump: Effect {
     static let values: [EffectValues] = [Jump.all]
     
-    static let all: EffectValues = (19, [.red, .orange, .yellow, .green, .blue, .purple], .wheel)
+    static let all: EffectValues = (19, [.systemRed, .systemOrange, .systemYellow, .systemGreen, .systemBlue, .systemPurple, .magenta], .wheelSolid)
 }

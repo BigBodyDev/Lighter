@@ -52,7 +52,7 @@ struct EffectsRow: View {
         return Group{
             if index < self.effects.count{
                 ZStack{
-                    BackgroundView(color: Color(self.effects[index].colors[0]))
+                    ColorIcon(type: self.effects[index].iconType, colors: self.effects[index].colors, shape: .rectangle)
                         .onTapGesture {
                             for x in self.linkedLights.indices{
                                 self.linkedLights[x].setEffect(effect: self.effects[index])//.setColor(color: self.colors[index])
@@ -63,10 +63,11 @@ struct EffectsRow: View {
                         Circle()
                             .fill(Color.white)
                             .padding(15)
+                            .shadow(radius: 10)
                     }
                 }
             }else{
-                BackgroundView(color: .clear)
+                ColorIcon(type: .solid, colors: [.clear], shape: .rectangle)
             }
         }
         .aspectRatio(1, contentMode: .fill)

@@ -16,17 +16,14 @@ struct BackgroundView: View {
     var body: some View {
         Group{
             if gradientColors == nil{
-                Rectangle()
+                RoundedRectangle(cornerRadius: 15)
                     .foregroundColor(color != nil ? color : colorScheme == .dark ? Color.white.opacity(0.1) : .white)
             }else{
-                Rectangle()
+                RoundedRectangle(cornerRadius: 15)
                     .fill(LinearGradient(gradient: Gradient(colors: gradientColors!), startPoint: .bottomLeading, endPoint: .topTrailing))
             }
         }
-        .cornerRadius(15)
         .shadow(color: colorScheme == .dark ? Color.clear : Color.black.opacity(0.1), radius: 10)
-        
-        
     }
 }
 

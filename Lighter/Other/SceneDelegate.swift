@@ -22,11 +22,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Get the managed object context from the shared persistent container.
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         
-        UITableView.appearance().separatorColor = .clear
-        UITableView.appearance().showsVerticalScrollIndicator = false
+//        UITableView.appearance().separatorColor = .clear
+//        UITableView.appearance().showsVerticalScrollIndicator = false
         UITableViewCell.appearance().selectionStyle = .none
-        UITableViewCell.appearance().clipsToBounds = false
-        UITableViewCell.appearance().backgroundColor = .clear
+//        UITableViewCell.appearance().clipsToBounds = false
+//        UITableViewCell.appearance().backgroundColor = .clear
 
         // Create the SwiftUI view and set the context as the value for the managedObjectContext environment keyPath.
         // Add `@Environment(\.managedObjectContext)` in the views that will need the context.

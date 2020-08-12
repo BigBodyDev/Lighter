@@ -11,43 +11,23 @@ import SwiftUI
 
 
 struct ColorsView: View {
+    @EnvironmentObject var manager: LightManager
     @Binding var linkedLights: [Light]
     @State var colors : [UIColor] = [
         .red,
         .systemOrange,
+        .yellow,
         .systemYellow,
         .green,
+        .cyan,
+        .systemTeal,
+        .blue,
         .systemBlue,
         .systemPurple,
+        .magenta,
         .systemPink,
-        .red,
-        .systemOrange,
-        .systemYellow,
-        .green,
-        .systemBlue,
-        .systemPurple,
-        .systemPink,
-        .red,
-        .systemOrange,
-        .systemYellow,
-        .green,
-        .systemBlue,
-        .systemPurple,
-        .systemPink,
-        .red,
-        .systemOrange,
-        .systemYellow,
-        .green,
-        .systemBlue,
-        .systemPurple,
-        .systemPink,
-        .red,
-        .systemOrange,
-        .systemYellow,
-        .green,
-        .systemBlue,
-        .systemPurple,
-        .systemPink
+        .systemRed,
+        .white
     ]
     
     func itemForCoordinates(x: Int, y: Int) -> some View{
@@ -69,7 +49,7 @@ struct ColorsView: View {
         return Group{
             if index < self.colors.count{
                 ZStack{
-                    BackgroundView(color: Color(self.colors[index]))
+                    ColorIcon(type: .solid, colors: [self.colors[index]], shape: .rectangle)
                         .onTapGesture {
                             for x in self.linkedLights.indices{
                                 self.linkedLights[x].setColor(color: self.colors[index])
@@ -80,10 +60,11 @@ struct ColorsView: View {
                         Circle()
                             .fill(Color.white)
                             .padding(15)
+                            .shadow(radius: 10)
                     }
                 }
             }else{
-                BackgroundView(color: .clear)
+                ColorIcon(type: .solid, colors: [.clear], shape: .rectangle)
             }
         }
         .aspectRatio(1, contentMode: .fill)

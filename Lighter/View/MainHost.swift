@@ -15,23 +15,25 @@ struct MainHost: View {
     
     var body: some View {
         NavigationView {
-            List {
-                
-                Group{
-                    LightsRow(lights: self.$manager.lights, linkedLights: self.$linkedLights)
-                    
-                    GroupsRow(groups: self.$manager.groups)
-                    
-                    EffectsBlock(linkedLights: self.$linkedLights)
-                    
-                    ColorsView(linkedLights: self.$linkedLights)
+            ZStack(alignment: .bottomTrailing){
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack{
+                        Group{
+                            LightsRow(linkedLights: self.$linkedLights)
+                            
+                            GroupsRow(linkedLights: self.$linkedLights)
+                            
+                            ColorsView(linkedLights: self.$linkedLights)
+                            
+                            EffectsBlock(linkedLights: self.$linkedLights)
+                        }
+                        .padding(.bottom, 15)
+                        
+                    }
                 }
-                .padding(.horizontal, -20)
-                .padding(.bottom, 15)
-                
             }
+            
             .navigationBarTitle("Lighter")
-//            .listRowBackground(Color.clear)
         }
     }
 }

@@ -87,6 +87,7 @@ class CoreDataManager: NSObject{
                 appDelegate?.saveContext()
             }
         }
+        LightManager.shared.objectWillChange.send()
     }
     
     func persist(group: LightGroup, withMethod method: ChangeMethod){
@@ -94,17 +95,7 @@ class CoreDataManager: NSObject{
         case .post:
             let cdm = CDMLightGroup(context: managedObjectContext)
             cdm.name = group.name
-            cdm.uuid = group.UUID
-            
-            cdm.isOn = group.isOn
-            cdm.state = group.state.rawValue
-            
-            cdm.red = Double(group.color?.components.red ?? 1)
-            cdm.green = Double(group.color?.components.green ?? 1)
-            cdm.blue = Double(group.color?.components.blue ?? 1)
-            
-            cdm.effect = group.effect?.index ?? 0
-            cdm.speed = group.speed ?? 0
+            cdm.uuid = group.uuid
             
             for light in group.lights{
                 if let cdmLight = self.lights.first(where: { $0.peripheralUUID == light.peripheralUUID }){
@@ -114,19 +105,9 @@ class CoreDataManager: NSObject{
             
             appDelegate?.saveContext()
         case .put:
-            guard let index = self.groups.firstIndex(where: { group.UUID == $0.uuid }) else { return }
+            guard let index = self.groups.firstIndex(where: { group.uuid == $0.uuid }) else { return }
             
             self.groups[index].name = group.name
-            
-            self.groups[index].isOn = group.isOn
-            self.groups[index].state = group.state.rawValue
-            
-            self.groups[index].red = Double(group.color?.components.red ?? 1)
-            self.groups[index].green = Double(group.color?.components.green ?? 1)
-            self.groups[index].blue = Double(group.color?.components.blue ?? 1)
-            
-            self.groups[index].effect = group.effect?.index ?? 0
-            self.groups[index].speed = group.speed ?? 0
             
             self.groups[index].removeFromLights(self.groups[index].lights ?? NSSet())
             for light in group.lights{
@@ -138,12 +119,14 @@ class CoreDataManager: NSObject{
             appDelegate?.saveContext()
             
         case .delete:
-            if let index = self.groups.firstIndex(where: { group.UUID == $0.uuid }) {
+            if let index = self.groups.firstIndex(where: { group.uuid == $0.uuid }) {
                 managedObjectContext.delete(self.groups[index])
                 self.groups.remove(at: index)
                 
                 appDelegate?.saveContext()
             }
         }
+        
+        LightManager.shared.objectWillChange.send()
     }
 }

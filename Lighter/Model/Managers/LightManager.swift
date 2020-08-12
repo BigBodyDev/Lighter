@@ -32,6 +32,7 @@ class LightManager: NSObject, ObservableObject, CoreBluetoothManagerDelegate{
         
         self.dataManager = CoreDataManager()
         self.lights = dataManager.lights.map( { Light(cdm: $0) })
+        self.groups = dataManager.groups.map( { LightGroup(cdm: $0) })
         
         self.bluetoothManager = CoreBluetoothManager()
         self.bluetoothManager.delegate = self
@@ -43,6 +44,18 @@ class LightManager: NSObject, ObservableObject, CoreBluetoothManagerDelegate{
             self.lights[index].link(withPeripheral: peripheral)
         }else{
             self.lights.append(Light(peripheral: peripheral))
+        }
+    }
+    
+    func addLightGroup(group: LightGroup){
+        self.groups.append(group)
+        self.persist(group: group, withMethod: .post)
+    }
+    
+    func removeLightGroup(group: LightGroup){
+        if let index = self.groups.firstIndex(of: group){
+            self.groups.remove(at: index)
+            self.persist(group: group, withMethod: .delete)
         }
     }
     

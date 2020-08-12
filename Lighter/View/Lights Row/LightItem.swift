@@ -19,19 +19,21 @@ struct LightItem: View {
     var body: some View {
         VStack(spacing: 5){
             ZStack{
-                
-                BackgroundView(color: self.linkedLights.contains(self.light) ? .blue : nil)
+                ZStack(alignment: .topTrailing){
+                    BackgroundView(color: self.linkedLights.contains(self.light) ? .blue : nil)
+                    
+                    if self.light.isOn && self.light.status == .connected{
+                        Group{
+                            ColorIcon(type: light.state == .color ? .solid : self.light.effect!.iconType, colors: light.state == .color ? [light.color!] : self.light.effect!.colors, shape: .circle)
+                        }
+                        .frame(width: 25, height: 25)
+                        .padding(.trailing, -5)
+                        .padding(.top, -5)
+                    }
+                }
                 
                 ZStack(alignment: .center){
-                    if light.status == .connected {
-                        Image(systemName: light.isOn ? "lightbulb.fill" : "lightbulb")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundColor(Color(light.color ?? .white))
-                            .frame(width: 30, height: 40)
-                    }
-                    
-                    Image(systemName: light.status != .connected ? "lightbulb.slash" : "lightbulb")
+                    Image(systemName: light.status != .connected ? "lightbulb.slash" : light.isOn ? "lightbulb.fill" : "lightbulb")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .foregroundColor(.white)
@@ -46,19 +48,25 @@ struct LightItem: View {
                     }
                     .frame(width: 15, height: 15)
                     .padding(.leading, 25)
-                        .padding(.top, -25)
+                    .padding(.top, -25)
                 }
             }
             .frame(width: 100, height: 100)
             .onTapGesture(count: 2) {
-                self.showRegistration.toggle()
+                if self.light.status == .unregistered {
+                    self.showRegistration.toggle()
+                }else if let index = self.linkedLights.firstIndex(of: self.light){
+                    self.linkedLights.remove(at: index)
+                }else{
+                    self.linkedLights.append(self.light)
+                }
             }
             .onTapGesture(count: 1) {
                 if self.light.status == .unregistered {
                     self.showRegistration.toggle()
                 }else if self.linkedLights.contains(self.light){
                     let condition = self.linkedLights.contains(where: { !$0.isOn })
-                    
+
                     for index in self.manager.lights.indices {
                         if self.linkedLights.contains(self.manager.lights[index]) {
                             self.manager.lights[index].setPower(isOn: condition)
@@ -69,21 +77,17 @@ struct LightItem: View {
                 }
             }
             .onLongPressGesture {
-                if self.light.status == .unregistered {
-                    self.showRegistration.toggle()
-                }else if let index = self.linkedLights.firstIndex(of: self.light){
-                    self.linkedLights.remove(at: index)
-                }else{
-                    self.linkedLights.append(self.light)
-                }
+                self.showRegistration.toggle()
+
             }
 
             Text(light.registeredName)
                 .font(.footnote)
                 .frame(height: 20)
         }
+        .padding(.top, 6)
         .sheet(isPresented: self.$showRegistration) {
-            LightRegistrationHost(light: self.$light, lightName: self.light.registeredName == "New Light" ? String() : self.light.registeredName, showRegistration: self.$showRegistration)
+            LightRegistrationHost(light: self.$light, lightName: self.light.registeredName == "New Light" ? String() : self.light.registeredName, isPresented: self.$showRegistration)
                 .environmentObject(self.manager)
         }
     }

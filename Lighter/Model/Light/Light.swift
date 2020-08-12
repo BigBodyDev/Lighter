@@ -10,7 +10,7 @@ import Foundation
 import CoreBluetooth
 import UIKit
 
-class Light: ObservableObject, Equatable {
+class Light: ObservableObject, Equatable, Comparable {
     static var `default` = Light()
     
     enum State: Double{
@@ -100,32 +100,28 @@ class Light: ObservableObject, Equatable {
         self.speed = nil
         
         LightManager.shared.persist(light: self, withMethod: .delete)
-        LightManager.shared.objectWillChange.send()
     }
     
-    func changeLightName(_ newName: String){
-        self.registeredName = newName
+    func setName(name: String){
+        self.registeredName = name
         if self.status == .unregistered{
             self.status = self.peripheralName == String() ? .disconnected : .connected
             LightManager.shared.persist(light: self, withMethod: .post)
         }else{
             LightManager.shared.persist(light: self, withMethod: .put)
         }
-        LightManager.shared.objectWillChange.send()
     }
     
     func toggle(){
         self.isOn = !self.isOn
         
         LightManager.shared.setPower(light: self, isOn: self.isOn)
-        LightManager.shared.objectWillChange.send()
     }
     
     func setPower(isOn: Bool){
         self.isOn = isOn
         
         LightManager.shared.setPower(light: self, isOn: isOn)
-        LightManager.shared.objectWillChange.send()
     }
     
     func setColor(color: UIColor){
@@ -134,7 +130,6 @@ class Light: ObservableObject, Equatable {
         self.state = .color
         
         LightManager.shared.setColor(light: self, color: color)
-        LightManager.shared.objectWillChange.send()
     }
     
     func setEffect(effect: Effect.EffectValues){
@@ -143,11 +138,14 @@ class Light: ObservableObject, Equatable {
         self.state = .effect
         
         LightManager.shared.setEffect(light: self, effect: effect)
-        LightManager.shared.objectWillChange.send()
     }
     
     
     static func == (lhs: Light, rhs: Light) -> Bool {
         lhs.peripheralUUID == rhs.peripheralUUID
+    }
+    
+    static func < (lhs: Light, rhs: Light) -> Bool {
+        lhs.peripheralUUID.uuidString < rhs.peripheralUUID.uuidString
     }
 }
