@@ -13,6 +13,16 @@ struct MainHost: View {
     
     @State var linkedLights: [Light] = [Light]()
     
+    var lightStatesEqual: Bool {
+        var colorCount = 0
+        var effectCount = 0
+        for light in self.linkedLights{
+            colorCount += light.state == .color ? 1 : 0
+            effectCount += light.state == .effect ? 1 : 0
+        }
+        return !self.linkedLights.isEmpty && (colorCount == self.linkedLights.count || effectCount == self.linkedLights.count)
+    }
+    
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottomTrailing){
@@ -30,6 +40,12 @@ struct MainHost: View {
                         .padding(.bottom, 15)
                         
                     }
+                }
+                
+                if lightStatesEqual{
+                    SBView(speed: self.$manager.speed, brightness: self.$manager.brightness, linkedLights: self.$linkedLights)
+                        .padding([.horizontal, .top])
+                        .padding(.bottom, 35)
                 }
             }
             

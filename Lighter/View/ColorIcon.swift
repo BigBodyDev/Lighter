@@ -31,30 +31,30 @@ struct ColorIcon: View {
         ZStack{
             if self.type == .solid{
                 Rectangle()
-                    .foregroundColor(Color(colors[0]))
+                    .foregroundColor(Color(colors[0].color(withBrightness: 1)))
             }else if self.type == .twoSolid{
                 Rectangle()
-                    .foregroundColor(Color(colors[0]))
+                    .foregroundColor(Color(colors[0].color(withBrightness: 1)))
                     .mask(Triangle(point1: .topLeft, point2: .bottomLeft, point3: .topRight))
 
                 Rectangle()
-                    .foregroundColor(Color(colors[1]))
+                    .foregroundColor(Color(colors[1].color(withBrightness: 1)))
                     .mask(Triangle(point1: .bottomLeft, point2: .topRight, point3: .bottomRight))
 
             }else if self.type == .twoGradient{
                 Rectangle()
-                    .fill(LinearGradient(gradient: Gradient(colors: [Color(self.colors[0]), Color(self.colors[1])]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .fill(LinearGradient(gradient: Gradient(colors: [Color(self.colors[0].color(withBrightness: 1)), Color(self.colors[1].color(withBrightness: 1))]), startPoint: .topLeading, endPoint: .bottomTrailing))
             }else if self.type == .wheelSolid{
-                Wheel(colors: self.colors.map({ Color($0) }))
+                Wheel(colors: self.colors.map({ Color($0.color(withBrightness: 1)) }))
                 .mask(Rectangle())
 
             }else if self.type == .wheelGradient{
                 Rectangle()
-                    .fill(AngularGradient(gradient: Gradient(colors: self.colors.map( { Color($0) } )), center: .center))
+                    .fill(AngularGradient(gradient: Gradient(colors: self.colors.map( { Color($0.color(withBrightness: 1)) } )), center: .center))
                 
             }else if self.type == .slices{
                 Rectangle()
-                    .fill(LinearGradient(gradient: Gradient(colors: colors.map( { Color($0) } )), startPoint: .bottomLeading, endPoint: .topTrailing))
+                    .fill(LinearGradient(gradient: Gradient(colors: colors.map( { Color($0.color(withBrightness: 1)) } )), startPoint: .bottomLeading, endPoint: .topTrailing))
                     .mask(Triangle(point1: .topLeft, point2: .bottomLeft, point3: .topRight))
                 
                 Rectangle()

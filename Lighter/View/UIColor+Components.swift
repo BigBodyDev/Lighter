@@ -1,5 +1,5 @@
 //
-//  Colors.swift
+//  UIColor+Components.swift
 //  Lighter
 //
 //  Created by Devin Green on 8/3/20.
@@ -10,8 +10,7 @@ import Foundation
 import SwiftUI
 import UIKit
 
-extension UIColor {
-    
+public extension UIColor {
     typealias ColorComponents = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
 
     var components: ColorComponents {

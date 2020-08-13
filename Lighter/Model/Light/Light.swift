@@ -38,7 +38,6 @@ class Light: ObservableObject, Equatable, Comparable {
 //    Configuration
     @Published private(set) var color: UIColor?
     @Published private(set) var effect: Effect.EffectValues?
-    @Published private(set) var speed: Double?
     
     
 //    Basic Initialization
@@ -75,7 +74,6 @@ class Light: ObservableObject, Equatable, Comparable {
         
         self.color = UIColor(red: CGFloat(cdm.red), green: CGFloat(cdm.green), blue: CGFloat(cdm.blue), alpha: 1)
         self.effect = Effect.effect(withIndex: cdm.effect)
-        self.speed = cdm.speed
     }
     
 //    Function to link the disconnected CDMLight with the light peripheral
@@ -97,7 +95,6 @@ class Light: ObservableObject, Equatable, Comparable {
         
         self.color = nil
         self.effect = nil
-        self.speed = nil
         
         LightManager.shared.persist(light: self, withMethod: .delete)
     }
@@ -140,6 +137,13 @@ class Light: ObservableObject, Equatable, Comparable {
         LightManager.shared.setEffect(light: self, effect: effect)
     }
     
+    func setSpeed(speed: Double){
+        LightManager.shared.setSpeed(light: self, speed: speed)
+    }
+    
+    func setBrightness(brightness: Double){
+        LightManager.shared.setBrightness(light: self, brightness: brightness)
+    }
     
     static func == (lhs: Light, rhs: Light) -> Bool {
         lhs.peripheralUUID == rhs.peripheralUUID

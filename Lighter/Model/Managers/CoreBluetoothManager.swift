@@ -9,14 +9,6 @@
 import Foundation
 import CoreBluetooth
 
-//        Check and see if there are any lights stored in core data.
-//        Add all core data lights to the lights array. (Set to their previous light state, but disconnected)
-//        Check and see if there are any nearby bluetooth peripherals
-//        Check and see if the bluetooth peripheral is part of the Triones family.
-//        If it is, connect to it.
-//        Check and see if there is any light with a matching UUID to the peripheral
-//        Update the connection status of the light
-
 protocol CoreBluetoothManagerDelegate: class {
     func didDiscoverLightPeripheral(peripheral: CBPeripheral)
 }
@@ -39,9 +31,9 @@ class CoreBluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDele
             self.refresh()
         }
         
-        Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { (timer) in
-            self.refresh()
-        }
+//        Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { (timer) in
+//            self.refresh()
+//        }
     }
     
     func refresh(){
@@ -93,13 +85,7 @@ class CoreBluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDele
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-//        if let characteristics = service.characteristics{
-//            if let ffd9 = characteristics.first(where: { (characteristic) -> Bool in characteristic.uuid.uuidString == "FFD9" }){
-                
-//            }else if let ffd4 = characteristics.first(where: { (characteristic) -> Bool in characteristic.uuid.uuidString == "FFD4" }){
-//                peripheral.setNotifyValue(true, for: ffd4)
-//            }
-//        }
+        
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
@@ -112,34 +98,6 @@ class CoreBluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDele
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         print(characteristic.description)
-//        if let value = characteristic.value{
-//            let data = NSData(data: value)
-//            let bytesString = data.description.split(separator: "x")[1].split(separator: "}")[0]
-//            
-//            var append = false
-//            var byteStrings = [String]()
-//            for char in bytesString.uppercased(){
-//                if append{
-//                    byteStrings[byteStrings.count - 1] += String(char)
-//                }else{
-//                    byteStrings.append(String(char))
-//                }
-//                append = !append
-//            }
-//            let bytes: [Byte] = [
-//                Byte(type: .power, value: byteStrings[2]),
-//                Byte(type: .mode, value: byteStrings[3]),
-//                Byte(type: .speed, value: byteStrings[5]),
-//                Byte(type: .red, value: byteStrings[6]),
-//                Byte(type: .green, value: byteStrings[7]),
-//                Byte(type: .blue, value: byteStrings[8]),
-//                Byte(type: .white, value: byteStrings[9])
-//            ]
-//            
-//            for byte in bytes{
-//                print(byte.description)
-//            }
-//        }
     }
     
     class Byte{

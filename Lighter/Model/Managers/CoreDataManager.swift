@@ -58,7 +58,6 @@ class CoreDataManager: NSObject{
             cdm.blue = Double(light.color?.components.blue ?? 1)
             
             cdm.effect = light.effect?.index ?? 0
-            cdm.speed = light.speed ?? 0
             
             appDelegate?.saveContext()
             
@@ -75,7 +74,6 @@ class CoreDataManager: NSObject{
             self.lights[index].blue = Double(light.color?.components.blue ?? 1)
             
             self.lights[index].effect = light.effect?.index ?? 0
-            self.lights[index].speed = light.speed ?? 0
             
             appDelegate?.saveContext()
             

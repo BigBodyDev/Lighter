@@ -49,8 +49,11 @@
 		CE79FC1624E36B5C003F0572 /* ColorIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE79FC1524E36B5C003F0572 /* ColorIcon.swift */; };
 		CEAC44EB24E39AE500B40A2E /* GroupAddEditHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAC44EA24E39AE500B40A2E /* GroupAddEditHost.swift */; };
 		CEAC44EF24E3BC9800B40A2E /* LightOptionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAC44EE24E3BC9800B40A2E /* LightOptionRow.swift */; };
-		CEAC44F124E4993100B40A2E /* SpeedBrightnessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAC44F024E4993100B40A2E /* SpeedBrightnessView.swift */; };
-		CEAE40E324D8F7F200709F7E /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAE40E224D8F7F200709F7E /* Colors.swift */; };
+		CEAC44F124E4993100B40A2E /* SBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAC44F024E4993100B40A2E /* SBView.swift */; };
+		CEAC44F324E4D29B00B40A2E /* UIColor+Brightness.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAC44F224E4D29B00B40A2E /* UIColor+Brightness.swift */; };
+		CEAC44F524E4E6DC00B40A2E /* SBSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAC44F424E4E6DC00B40A2E /* SBSlider.swift */; };
+		CEAE40E324D8F7F200709F7E /* UIColor+Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAE40E224D8F7F200709F7E /* UIColor+Components.swift */; };
+		CEF55BB024E51CCD00E390FE /* UserDefaults+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF55BAF24E51CCD00E390FE /* UserDefaults+Keys.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,8 +122,11 @@
 		CE79FC1524E36B5C003F0572 /* ColorIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorIcon.swift; sourceTree = "<group>"; };
 		CEAC44EA24E39AE500B40A2E /* GroupAddEditHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAddEditHost.swift; sourceTree = "<group>"; };
 		CEAC44EE24E3BC9800B40A2E /* LightOptionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightOptionRow.swift; sourceTree = "<group>"; };
-		CEAC44F024E4993100B40A2E /* SpeedBrightnessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedBrightnessView.swift; sourceTree = "<group>"; };
-		CEAE40E224D8F7F200709F7E /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		CEAC44F024E4993100B40A2E /* SBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBView.swift; sourceTree = "<group>"; };
+		CEAC44F224E4D29B00B40A2E /* UIColor+Brightness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Brightness.swift"; sourceTree = "<group>"; };
+		CEAC44F424E4E6DC00B40A2E /* SBSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSlider.swift; sourceTree = "<group>"; };
+		CEAE40E224D8F7F200709F7E /* UIColor+Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Components.swift"; sourceTree = "<group>"; };
+		CEF55BAF24E51CCD00E390FE /* UserDefaults+Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Keys.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,14 +274,17 @@
 			isa = PBXGroup;
 			children = (
 				CE097A8E24CE99B40014A4DE /* MainHost.swift */,
-				CEAC44F024E4993100B40A2E /* SpeedBrightnessView.swift */,
+				CEAC44F024E4993100B40A2E /* SBView.swift */,
 				CE097A7E24CE99330014A4DE /* Lights Row */,
 				CE097A8324CE99330014A4DE /* GroupsRow */,
 				CE097A8524CE99330014A4DE /* ColorsView */,
 				CE329DD624CFD0D000AC6806 /* Effects */,
 				CE097A8124CE99330014A4DE /* BackgroundView.swift */,
+				CEAC44F424E4E6DC00B40A2E /* SBSlider.swift */,
 				CE79FC1524E36B5C003F0572 /* ColorIcon.swift */,
-				CEAE40E224D8F7F200709F7E /* Colors.swift */,
+				CEAE40E224D8F7F200709F7E /* UIColor+Components.swift */,
+				CEAC44F224E4D29B00B40A2E /* UIColor+Brightness.swift */,
+				CEF55BAF24E51CCD00E390FE /* UserDefaults+Keys.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -483,10 +492,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEF55BB024E51CCD00E390FE /* UserDefaults+Keys.swift in Sources */,
 				CEAC44EF24E3BC9800B40A2E /* LightOptionRow.swift in Sources */,
 				CE063C8E24CFD24300C6C855 /* GridPreferences.swift in Sources */,
 				CE329DD324CFA52C00AC6806 /* LightManager.swift in Sources */,
 				CE097A4024CE98FB0014A4DE /* AppDelegate.swift in Sources */,
+				CEAC44F324E4D29B00B40A2E /* UIColor+Brightness.swift in Sources */,
 				CE097A8924CE99330014A4DE /* BackgroundView.swift in Sources */,
 				CE063C8C24CFD24300C6C855 /* View+GridStyle.swift in Sources */,
 				CE79FC1624E36B5C003F0572 /* ColorIcon.swift in Sources */,
@@ -500,6 +511,7 @@
 				CE79FC1424E220C9003F0572 /* Effect.swift in Sources */,
 				CE097A8B24CE99330014A4DE /* GroupsRow.swift in Sources */,
 				CE063C9024CFD24300C6C855 /* EnvironmentValues+GridStyle.swift in Sources */,
+				CEAC44F524E4E6DC00B40A2E /* SBSlider.swift in Sources */,
 				CE79FC1224E21873003F0572 /* EffectsRow.swift in Sources */,
 				CE063C8924CFD24300C6C855 /* LayoutMath.swift in Sources */,
 				CE097A4524CE98FB0014A4DE /* Lighter.xcdatamodeld in Sources */,
@@ -520,8 +532,8 @@
 				CE428F8524D8E09B00E10C9C /* CoreDataManager.swift in Sources */,
 				CE063C8A24CFD24300C6C855 /* GridStyle.swift in Sources */,
 				CE428F8724D8E0A800E10C9C /* CoreBluetoothManager.swift in Sources */,
-				CEAC44F124E4993100B40A2E /* SpeedBrightnessView.swift in Sources */,
-				CEAE40E324D8F7F200709F7E /* Colors.swift in Sources */,
+				CEAC44F124E4993100B40A2E /* SBView.swift in Sources */,
+				CEAE40E324D8F7F200709F7E /* UIColor+Components.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
